@@ -27,7 +27,7 @@ const App: React.FC = () => {
     }, [handleGenerateSchedule]);
 
     return (
-        <div className="flex justify-center items-start min-h-screen p-4">
+        <div className={`flex justify-center ${!activeScheduleConfig ? 'items-center' : 'items-start'} min-h-screen p-4`}>
             {!activeScheduleConfig ? (
                 <MainView onGenerate={handleGenerateSchedule} />
             ) : (
