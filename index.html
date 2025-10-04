@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offshore Mate - Rotation Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --dark-bg: #111827;
+            --dark-card: #1f2937;
+            --brand-blue: #4f46e5;
+            --brand-orange: #f97316;
+            --brand-gradient: linear-gradient(to right, var(--brand-blue), var(--brand-orange));
+            --offshore-bg: rgba(249, 115, 22, 0.25);
+            --offshore-text: #fb923c; /* orange-400 */
+        }
+
+        /* Keyframes for subtle background glow animation */
+        @keyframes subtle-drift {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(20px, -30px) scale(1.05); }
+            50% { transform: translate(-10px, 10px) scale(0.95); }
+            75% { transform: translate(25px, 40px) scale(1.02); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: #d1d5db; /* gray-300 */
+            position: relative;
+            /* overflow: hidden; Removed to allow content scrolling */
+            z-index: 1;
+            /* New premium background: subtle dot grid */
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0);
+            background-size: 2rem 2rem;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(150px);
+            opacity: 0.2;
+            pointer-events: none; /* Make sure they don't intercept clicks */
+        }
+
+        /* Top-left blueish glow, now larger and animated */
+        body::before {
+            width: 500px;
+            height: 500px;
+            background-color: var(--brand-blue);
+            top: -150px;
+            left: -150px;
+            animation: subtle-drift 80s infinite linear alternate;
+        }
+
+        /* Bottom-right orange glow, now larger and animated */
+        body::after {
+            width: 600px;
+            height: 600px;
+            background-color: var(--brand-orange);
+            bottom: -200px;
+            right: -200px;
+            animation: subtle-drift 100s infinite linear alternate-reverse;
+        }
+
+        .font-dela-gothic {
+            font-family: 'Dela Gothic One', cursive;
+        }
+        
+        .brand-text-gradient {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(72%) sepia(45%) saturate(3533%) hue-rotate(328deg) brightness(99%) contrast(97%); /* Orange to match icon */
+            cursor: pointer;
+        }
+
+        .accent-button {
+            background-image: var(--brand-gradient);
+            transition: all 0.3s ease;
+        }
+
+        .accent-button:hover {
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.25), 0 8px 24px rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background-color: rgba(31, 41, 55, 0.5); /* Semi-transparent --dark-card */
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .m3-segmented-button-group { 
+            display: flex;
+            background-color: rgba(17, 24, 39, 0.5); /* transparent dark-bg */
+            border-radius: 100px;
+            padding: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .m3-segmented-button { flex: 1; padding: 12px 0; border: none; background-color: transparent; color: #a1a1aa; cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 13px; border-radius: 100px; }
+        .m3-segmented-button.active {
+             background-image: var(--brand-gradient);
+             color: white; 
+             box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2), 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .loader { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        .loader-small { width: 16px; height: 16px; border: 2px solid var(--brand-orange); border-radius: 50%; border-top-color: transparent; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .gemini-content h2, .gemini-content h3 { font-size: 1.125rem; font-weight: 700; color: #f9fafb; margin-top: 1rem; margin-bottom: 0.5rem; padding-bottom: 0.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);}
+        .gemini-content ul { list-style-type: disc; padding-left: 1.25rem; color: #d1d5db; line-height: 1.75; }
+        .gemini-content li { margin-bottom: 0.5rem; }
+        .gemini-content strong { font-weight: 600; color: #f9fafb; }
+        .gemini-content p { margin-bottom: 0.75rem; color: #d1d5db; }
+
+        .calendar-nav-btn { background-color: rgba(31, 41, 55, 0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .calendar-nav-btn:hover { background-color: rgba(55, 65, 81, 0.7); transform: translateY(-1px); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendar-day-name { text-align: center; font-weight: 600; color: #9ca3af; font-size: 0.75rem; padding-bottom: 0.5rem; }
+        .calendar-day { 
+            aspect-ratio: 6 / 5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-weight: 500; 
+            border-radius: 12px; 
+            color: #f3f4f6; /* gray-100 */
+            transition: background-color 0.2s ease, color 0.2s ease; 
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calendar-day:hover:not(.other-month):not(.offshore) { background-color: rgba(255, 255, 255, 0.1); }
+        .calendar-day.other-month { color: #6b7280; cursor: default; }
+        .calendar-day.today .day-text {
+            border: 2px solid var(--brand-orange);
+            border-radius: 50%;
+            background-color: transparent;
+            width: 2.25rem;
+            height: 2.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calendar-day.onshore { /* default style */ }
+
+        .calendar-day.offshore { 
+            background-color: transparent; /* Moved to pseudo-element */
+        }
+        .calendar-day.offshore .day-text {
+            color: var(--offshore-text);
+            font-weight: 600;
+        }
+        
+        /* Pill shape styling for offshore days using pseudo-elements for seamless look */
+        .calendar-day.offshore::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background-color: var(--offshore-bg);
+            z-index: -1;
+            left: 0;
+            right: 0;
+        }
+        .calendar-day.offshore-start::before { border-radius: 100px 0 0 100px; right: -2px; }
+        .calendar-day.offshore-end::before { border-radius: 0 100px 100px 0; left: -2px; }
+        .calendar-day.offshore-middle::before { border-radius: 0; left: -2px; right: -2px; }
+        .calendar-day.offshore-single::before { border-radius: 100px; }
+
+        /* Constrain backgrounds at the edges of the calendar grid */
+        .calendar-day.is-first-col.offshore-middle::before,
+        .calendar-day.is-first-col.offshore-end::before { left: 0; }
+        .calendar-day.is-last-col.offshore-middle::before,
+        .calendar-day.is-last-col.offshore-start::before { right: 0; }
+        
+        /* Vertical lines between highlighted offshore days */
+        .calendar-day:not(.is-first-col).offshore-middle::before,
+        .calendar-day:not(.is-first-col).offshore-end::before {
+            border-left: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        #yearly-calendar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media (min-width: 768px) { #yearly-calendar-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { 
+            #yearly-calendar-grid { 
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem; /* Increased gap for better spacing on desktop */
+            }
+            .mini-calendar {
+                aspect-ratio: 1 / 1;
+            }
+        }
+        
+        .mini-calendar {
+            background-color: rgba(31, 41, 55, 0.8);
+        }
+
+        .mini-calendar:hover {
+            border-color: var(--brand-orange);
+            transform: translateY(-2px);
+        }
+
+        .mini-calendar-day {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-size: 0.7rem;
+            z-index: 1;
+        }
+        
+        .mini-calendar-day.other-month .day-text { color: #6b7280; /* gray-500 */ }
+
+        .mini-calendar-day .day-text {
+            color: #f3f4f6; /* gray-100 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+        }
+        .mini-calendar-day.today .day-text {
+            border: 1px solid var(--brand-orange);
+        }
+
+        .mini-calendar-day.offshore {
+            background-color: transparent;
+        }
+        .mini-calendar-day.offshore .day-text { color: var(--offshore-text); }
+        
+        /* Pill shape styling for mini-calendar offshore days */
+        .mini-calendar-day.offshore::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background-color: var(--offshore-bg);
+            z-index: -1;
+            left: 0;
+            right: 0;
+        }
+        .mini-calendar-day.offshore-start::before { border-radius: 100px 0 0 100px; right: -2px; }
+        .mini-calendar-day.offshore-end::before { border-radius: 0 100px 100px 0; left: -2px; }
+        .mini-calendar-day.offshore-middle::before { border-radius: 0; left: -2px; right: -2px; }
+        .mini-calendar-day.offshore-single::before { border-radius: 100px; }
+
+        /* Constrain backgrounds at the edges of the mini-calendar grid */
+        .mini-calendar-day.is-first-col.offshore-middle::before,
+        .mini-calendar-day.is-first-col.offshore-end::before { left: 0; }
+        .mini-calendar-day.is-last-col.offshore-middle::before,
+        .mini-calendar-day.is-last-col.offshore-start::before { right: 0; }
+        
+        /* Vertical lines for mini calendar */
+        .mini-calendar-day:not(.is-first-col).offshore-middle::before,
+        .mini-calendar-day:not(.is-first-col).offshore-end::before {
+            border-left: 1px solid rgba(249, 115, 22, 0.6);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* 8px */
+        }
+        .legend-dot {
+            width: 1rem; /* 16px */
+            height: 1rem; /* 16px */
+            border-radius: 50%;
+            border-width: 2px;
+        }
+
+        /* Modal Transitions */
+        .modal-overlay {
+            opacity: 0;
+            transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.open {
+            opacity: 1;
+        }
+        .modal-content {
+            opacity: 0;
+            transform: scale(0.95) translateY(1rem);
+            transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: rgba(31, 41, 55, 0.6);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-overlay.open .modal-content {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        .action-dropdown {
+            background-color: rgba(31, 41, 55, 0.7); /* Slightly more opaque for readability */
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+            transform-origin: top right;
+        }
+        .action-dropdown-hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .action-dropdown-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .schedule-list-item {
+            background-color: rgba(17, 24, 39, 0.6); /* Semi-transparent version of #111827 */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+        .schedule-list-item:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-900">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "Offshore Mate - Rotation Planner",
+  "description": "A sophisticated offshore rotation planner that visualizes work schedules on monthly and yearly calendars. Features include saving schedules, exporting to various formats (PNG, PDF, iCal), and AI-powered daily briefings using the Gemini API to provide relevant information for both offshore and onshore days.",
+  "requestFramePermissions": []
+}
