@@ -311,11 +311,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ scheduleConfig, onBack }) =
             <div className="flex justify-center items-center gap-8 mt-8 pt-6 border-t border-white/10">
                 <div className="legend-item">
                     <div className="legend-dot border-orange-400"></div>
-                    <span className="text-sm font-medium text-gray-400">Offshore</span>
+                    <span className="text-sm font-medium text-gray-400">Work Period</span>
                 </div>
                 <div className="legend-item">
                     <div className="legend-dot border-gray-500"></div>
-                    <span className="text-sm font-medium text-gray-400">Onshore</span>
+                    <span className="text-sm font-medium text-gray-400">Off Period</span>
                 </div>
             </div>
             

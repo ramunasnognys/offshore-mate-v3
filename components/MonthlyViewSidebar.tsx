@@ -53,11 +53,11 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
                 <h3 className="text-lg font-bold text-gray-50 mb-4">Summary for {monthName}</h3>
                 <div className="space-y-3 text-sm">
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Offshore Days:</span>
+                        <span className="text-gray-400">Work Days:</span>
                         <strong className="text-orange-400 font-semibold">{offshoreDays}</strong>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Onshore Days:</span>
+                        <span className="text-gray-400">Off Days:</span>
                         <strong className="text-gray-100 font-semibold">{onshoreDays}</strong>
                     </div>
                     {totalDays > 0 && (
@@ -65,7 +65,7 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
                             <div 
                                 className="bg-orange-500 h-2.5 rounded-full" 
                                 style={{ width: `${offshorePercentage}%` }}
-                                title={`${Math.round(offshorePercentage)}% Offshore`}
+                                title={`${Math.round(offshorePercentage)}% Work Period`}
                             ></div>
                         </div>
                     )}
