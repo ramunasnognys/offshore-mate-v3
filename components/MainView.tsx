@@ -77,12 +77,18 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
                         <h2 className="text-lg font-bold text-gray-50">Start Date</h2>
                     </div>
                     <p className="text-sm text-gray-400 mt-1 mb-4">When does your rotation begin?</p>
-                    <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="w-full py-3.5 px-4 rounded-full bg-black/30 border border-white/20 text-gray-300 placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 transition font-mono backdrop-blur-sm"
-                    />
+                    <div className="relative">
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full py-3.5 px-4 rounded-full bg-black/30 border border-white/20 text-gray-300 placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 transition font-mono backdrop-blur-sm pr-12"
+                            aria-label="Rotation start date"
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                            <CalendarIcon className="text-orange-400 w-5 h-5" />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="card col-span-2 rounded-2xl p-5">
