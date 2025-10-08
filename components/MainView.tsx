@@ -65,7 +65,7 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
         <div className="w-full max-w-md mx-auto my-8 transition-all duration-300 ease-in-out">
             <header className="flex flex-col items-center gap-2 mb-8 text-center">
                 <div className="relative inline-block">
-                    <h1 className="text-4xl sm:text-5xl brand-text-gradient font-title">Offshore Mate</h1>
+                    <h1 className="text-4xl sm:text-5xl brand-text-gradient font-dela-gothic">Offshore Mate</h1>
                     <span className="absolute top-0 right-0 -mt-2 -mr-5 sm:-mr-8 transform rotate-12 bg-orange-500 text-white text-xs font-bold uppercase px-2.5 py-1 rounded-full shadow-lg">
                         BETA
                     </span>
