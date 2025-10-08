@@ -45,7 +45,7 @@ const SaveScheduleModal: React.FC<SaveScheduleModalProps> = ({ isOpen, onClose, 
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-gray-50">Save Schedule</h2>
+                    <h2 className="text-xl font-title text-gray-50">Save Schedule</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <span className="material-icons-outlined">close</span>
                     </button>
@@ -74,7 +74,7 @@ const SaveScheduleModal: React.FC<SaveScheduleModalProps> = ({ isOpen, onClose, 
                 </div>
                 <div className="flex justify-end items-center gap-4 mt-2">
                     <button onClick={onClose} className="text-gray-300 font-semibold hover:text-white transition px-4 py-2 rounded-full hover:bg-white/10">Cancel</button>
-                    <button onClick={handleSaveClick} className="text-white font-bold py-2 px-6 rounded-full accent-button">Save</button>
+                    <button onClick={handleSaveClick} className="text-white font-title py-2 px-6 rounded-full accent-button">Save</button>
                 </div>
             </div>
         </div>

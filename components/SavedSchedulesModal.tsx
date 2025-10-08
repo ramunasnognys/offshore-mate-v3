@@ -47,8 +47,8 @@ const SavedSchedulesModal: React.FC<SavedSchedulesModalProps> = ({ isOpen, onClo
             >
                 <div className="flex justify-between items-center mb-6 flex-shrink-0">
                     <div className="flex items-center gap-3">
-                        <h2 id="saved-schedules-title" className="text-2xl font-bold text-gray-50">Saved Schedules</h2>
-                        <span className="flex items-center justify-center bg-gray-800/50 text-orange-400 text-sm font-bold w-7 h-7 rounded-full border-2 border-white/10 font-mono">
+                        <h2 id="saved-schedules-title" className="text-2xl font-title text-gray-50">Saved Schedules</h2>
+                        <span className="flex items-center justify-center bg-gray-800/50 text-orange-400 text-sm font-bold w-7 h-7 rounded-full border-2 border-white/10 font-numeric">
                             {schedules.length}
                         </span>
                     </div>
@@ -67,8 +67,8 @@ const SavedSchedulesModal: React.FC<SavedSchedulesModalProps> = ({ isOpen, onClo
                             {schedules.map(schedule => (
                                 <li key={schedule.id} className="schedule-list-item rounded-xl p-5 flex flex-col gap-4">
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-50">{schedule.name}</h3>
-                                        <div className="flex flex-wrap items-center text-sm text-gray-400 gap-x-2 mt-1.5">
+                                        <h3 className="text-xl font-title text-gray-50">{schedule.name}</h3>
+                                        <div className="flex flex-wrap items-center text-sm text-gray-400 gap-x-2 mt-1.5 font-numeric">
                                             <span className="font-semibold">{schedule.pattern}</span>
                                             <span>•</span>
                                             <span>Start: {new Date(schedule.startDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>

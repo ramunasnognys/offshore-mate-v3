@@ -64,8 +64,13 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
     return (
         <div className="w-full max-w-md mx-auto my-8 transition-all duration-300 ease-in-out">
             <header className="flex flex-col items-center gap-2 mb-8 text-center">
-                <h1 className="text-4xl sm:text-5xl brand-text-gradient font-dela-gothic">Offshore Mate</h1>
-                <p className="text-sm text-gray-400 font-medium max-w-xs">Your essential planner for offshore rotations.</p>
+                <div className="relative inline-block">
+                    <h1 className="text-4xl sm:text-5xl brand-text-gradient font-title">Offshore Mate</h1>
+                    <span className="absolute top-0 right-0 -mt-2 -mr-5 sm:-mr-8 transform rotate-12 bg-orange-500 text-white text-xs font-bold uppercase px-2.5 py-1 rounded-full shadow-lg">
+                        BETA
+                    </span>
+                </div>
+                <p className="text-sm text-gray-400 font-medium max-w-xs mt-2">Your essential planner for offshore rotations.</p>
             </header>
 
             <div className="grid grid-cols-2 gap-4">
@@ -82,7 +87,7 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            className="w-full py-3.5 px-4 rounded-full bg-black/30 border border-white/20 text-gray-300 placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 transition font-mono backdrop-blur-sm pr-12"
+                            className="w-full py-3.5 px-4 rounded-full bg-black/30 border border-white/20 text-gray-300 placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 transition font-numeric backdrop-blur-sm pr-12"
                             aria-label="Rotation start date"
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
@@ -172,7 +177,7 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
                     </div>
                     <div className="flex items-center gap-3">
                         {savedSchedulesCount > 0 && (
-                            <span className="text-orange-400 font-bold text-sm font-mono">
+                            <span className="text-orange-400 font-bold text-sm font-numeric">
                                 {savedSchedulesCount}
                             </span>
                         )}
@@ -180,7 +185,7 @@ const MainView: React.FC<MainViewProps> = ({ onGenerate }) => {
                     </div>
                 </div>
 
-                <button onClick={handleGenerateClick} className="col-span-2 w-full text-white font-bold py-4 px-4 rounded-full accent-button flex items-center justify-center text-lg shadow-lg">
+                <button onClick={handleGenerateClick} className="col-span-2 w-full text-white font-title py-4 px-4 rounded-full accent-button flex items-center justify-center text-lg shadow-lg">
                     Generate Schedule
                 </button>
             </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offshore Mate - Rotation Planner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Manrope:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -30,7 +30,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background-color: var(--dark-bg);
             color: #d1d5db; /* gray-300 */
             position: relative;
@@ -72,8 +72,14 @@
             animation: subtle-drift 100s infinite linear alternate-reverse;
         }
 
-        .font-dela-gothic {
-            font-family: 'Dela Gothic One', cursive;
+        .font-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+        }
+
+        .font-numeric {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-variant-numeric: tabular-nums;
         }
         
         .brand-text-gradient {
@@ -122,7 +128,7 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
-        .m3-segmented-button { flex: 1; padding: 12px 0; border: none; background-color: transparent; color: #a1a1aa; cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 13px; border-radius: 100px; }
+        .m3-segmented-button { flex: 1; padding: 12px 0; border: none; background-color: transparent; color: #a1a1aa; cursor: pointer; transition: all 0.3s ease; font-weight: 500; font-size: 13px; border-radius: 100px; }
         .m3-segmented-button.active {
              background-image: var(--brand-gradient);
              color: white; 

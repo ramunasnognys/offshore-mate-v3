@@ -208,17 +208,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({ scheduleConfig, onBack }) =
                 {/* Mobile Controls: Centered column */}
                 <div className="md:hidden flex flex-col items-center gap-4">
                     <div className="flex items-center justify-center w-full min-h-[44px]">
-                        {viewMode === 'monthly' && (
-                            <h2 className="text-xl font-bold text-gray-50 flex-grow text-center">
-                                {new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(calendarDate)}
-                            </h2>
-                        )}
+                        {/* The monthly title has been moved to the calendar card on mobile. This container maintains height to prevent layout shifts. */}
                         {viewMode === 'yearly' && (
                              <div className="flex items-center justify-center gap-4 w-full">
                                 <button onClick={() => handleNav('prev')} className="calendar-nav-btn text-gray-400 w-9 h-9">
                                     <ChevronLeftIcon className="w-5 h-5" />
                                 </button>
-                                <h2 className="text-xl font-bold text-gray-50 text-center w-24">
+                                <h2 className="text-xl text-gray-50 text-center w-24 font-numeric font-title">
                                     {calendarDate.getFullYear()}
                                 </h2>
                                 <button onClick={() => handleNav('next')} className="calendar-nav-btn text-gray-400 w-9 h-9">
@@ -244,9 +240,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ scheduleConfig, onBack }) =
                                 <button onClick={() => setViewMode('monthly')} className="m3-segmented-button active">Monthly</button>
                                 <button onClick={() => setViewMode('yearly')} className="m3-segmented-button">Yearly</button>
                             </div>
-                            <h2 className="text-xl font-bold text-gray-50 justify-self-end self-end">
-                                {new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(calendarDate)}
-                            </h2>
+                            {/* The month/year title is now inside the MonthlyCalendar component. The empty div keeps the layout consistent with the yearly view. */}
+                            <div />
                         </div>
                     )}
                     {/* Yearly view: 3-col grid */}
@@ -261,7 +256,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ scheduleConfig, onBack }) =
                                 <button onClick={() => handleNav('prev')} className="calendar-nav-btn text-gray-400 w-10 h-10">
                                     <ChevronLeftIcon className="w-6 h-6" />
                                 </button>
-                                <h2 className="text-xl font-bold text-gray-50 text-center w-24">
+                                <h2 className="text-xl text-gray-50 text-center w-24 font-numeric font-title">
                                     {calendarDate.getFullYear()}
                                 </h2>
                                 <button onClick={() => handleNav('next')} className="calendar-nav-btn text-gray-400 w-10 h-10">

@@ -1,6 +1,6 @@
 
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { ScheduleConfig } from '../types';
 import { getRotationStatus } from '../services/scheduleService';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
@@ -17,6 +17,52 @@ interface MonthlyCalendarProps {
 const DAY_NAMES = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
 const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ displayDate, scheduleConfig, onDayClick, onNav, onSetDate }) => {
+    
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
+    // Fade in new month
+    useEffect(() => {
+        setIsTransitioning(false);
+    }, [displayDate]);
+
+    // Swipe gesture handling for mobile
+    const touchStartX = useRef<number | null>(null);
+    const touchEndX = useRef<number | null>(null);
+    const minSwipeDistance = 50;
+
+    const handleNavWithTransition = (direction: 'prev' | 'next') => {
+        if (isTransitioning) return; // Prevent multiple navigations
+        setIsTransitioning(true);
+        setTimeout(() => {
+            onNav(direction);
+        }, 150); // Corresponds to half of the transition duration
+    };
+    
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.targetTouches[0].clientX;
+        touchEndX.current = null;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (touchStartX.current !== null) {
+            touchEndX.current = e.targetTouches[0].clientX;
+        }
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartX.current === null || touchEndX.current === null) return;
+
+        const distance = touchStartX.current - touchEndX.current;
+        
+        if (distance > minSwipeDistance) {
+            handleNavWithTransition('next'); // Left swipe
+        } else if (distance < -minSwipeDistance) {
+            handleNavWithTransition('prev'); // Right swipe
+        }
+        
+        touchStartX.current = null;
+        touchEndX.current = null;
+    };
     
     const calendarGrid = useMemo(() => {
         const year = displayDate.getFullYear();
@@ -73,7 +119,7 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ displayDate, schedule
                     className={classes.join(' ')} 
                     onClick={() => !isOtherMonth && onDayClick(currentDate)}
                 >
-                    <span className="day-text relative z-10">{currentDate.getDate()}</span>
+                    <span className="day-text font-numeric relative z-10">{currentDate.getDate()}</span>
                 </div>
             );
         }
@@ -81,10 +127,37 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ displayDate, schedule
     }, [displayDate, scheduleConfig, onDayClick]);
 
     return (
-        <div id="monthly-view-card" className="card rounded-2xl p-6 shadow-lg flex flex-col">
-            <div className="flex justify-end items-center mb-6">
+        <div 
+            id="monthly-view-card" 
+            className="card rounded-2xl p-6 shadow-lg flex flex-col"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            <div className="flex justify-between items-center mb-6">
+                {/* Mobile Title */}
+                <div className="md:hidden">
+                    <h2 className="text-lg font-title text-orange-400">
+                        {new Intl.DateTimeFormat('en-US', { month: 'long' }).format(displayDate)}
+                    </h2>
+                    <p className="text-xs font-medium text-gray-500 -mt-1 font-numeric">
+                        {displayDate.getFullYear()}
+                    </p>
+                </div>
+
+                {/* Desktop Title */}
+                <div className="hidden md:block">
+                    <h2 className="text-2xl font-title text-orange-400">
+                        {new Intl.DateTimeFormat('en-US', { month: 'long' }).format(displayDate)}
+                    </h2>
+                    <p className="text-sm font-medium text-gray-500 -mt-1 font-numeric">
+                        {displayDate.getFullYear()}
+                    </p>
+                </div>
+
+                {/* Navigation Controls */}
                 <div className="flex items-center gap-1 md:gap-2">
-                    <button onClick={() => onNav('prev')} className="calendar-nav-btn text-gray-400 w-9 h-9 md:w-10 md:h-10">
+                    <button onClick={() => handleNavWithTransition('prev')} className="calendar-nav-btn text-gray-400 w-9 h-9 md:w-10 md:h-10">
                         <ChevronLeftIcon className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                     <button 
@@ -93,19 +166,22 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ displayDate, schedule
                     >
                         Today
                     </button>
-                    <button onClick={() => onNav('next')} className="calendar-nav-btn text-gray-400 w-9 h-9 md:w-10 md:h-10">
+                    <button onClick={() => handleNavWithTransition('next')} className="calendar-nav-btn text-gray-400 w-9 h-9 md:w-10 md:h-10">
                         <ChevronRightIcon className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                 </div>
             </div>
-
-            <div className="calendar-grid mb-2">
-                {DAY_NAMES.map((day, index) => (
-                    <div key={index} className="calendar-day-name">{day}</div>
-                ))}
-            </div>
-            <div className="calendar-grid">
-                {calendarGrid}
+            
+            <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+                <div className="calendar-grid">
+                    {DAY_NAMES.map((day, index) => (
+                        <div key={index} className="calendar-day-name">{day}</div>
+                    ))}
+                </div>
+                <hr className="border-white/10 my-3" />
+                <div className="calendar-grid">
+                    {calendarGrid}
+                </div>
             </div>
         </div>
     );

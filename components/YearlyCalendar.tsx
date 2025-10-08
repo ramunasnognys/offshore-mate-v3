@@ -64,7 +64,7 @@ const MiniCalendar: React.FC<{ monthDate: Date; scheduleConfig: ScheduleConfig; 
             
             days.push(
                 <div key={currentDate.toISOString()} className={classes.join(' ')}>
-                    <span className="day-text">{currentDate.getDate()}</span>
+                    <span className="day-text font-numeric">{currentDate.getDate()}</span>
                 </div>
             );
         }
@@ -87,12 +87,13 @@ const MiniCalendar: React.FC<{ monthDate: Date; scheduleConfig: ScheduleConfig; 
 
     return (
         <div className={miniCalendarClasses} onClick={() => onMonthClick(monthDate)}>
-            <h3 className="font-bold text-center text-gray-50 mb-3 text-sm">
-                {new Intl.DateTimeFormat('en-US', { month: 'long' }).format(monthDate)}
+            <h3 className="font-title text-left text-orange-400 mb-2 text-sm tracking-wider">
+                {new Intl.DateTimeFormat('en-US', { month: 'short' }).format(monthDate).toUpperCase()}
             </h3>
-            <div className="grid grid-cols-7 mb-1">
+            <div className="grid grid-cols-7">
                 {DAY_NAMES.map((day, index) => <div key={index} className="text-xs font-medium text-gray-400 text-center">{day}</div>)}
             </div>
+            <hr className="border-white/10 my-1.5" />
             <div className="grid grid-cols-7 gap-1 flex-grow">
                 {monthGrid}
             </div>

@@ -63,7 +63,7 @@ const AIBriefingModal: React.FC<AIBriefingModalProps> = ({ isOpen, onClose, date
                 <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-3">
                         <span className={`material-icons-outlined ${color}`}>{icon}</span>
-                        <h2 className="text-xl font-bold text-gray-50">{formattedDate}</h2>
+                        <h2 className="text-xl font-title text-gray-50">{formattedDate}</h2>
                     </div>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <span className="material-icons-outlined">close</span>

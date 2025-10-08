@@ -27,22 +27,22 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
     return (
         <div className="card rounded-2xl p-6 shadow-lg flex flex-col gap-6 h-fit">
             <div>
-                <h3 className="text-lg font-bold text-gray-50 mb-4">Schedule Overview</h3>
+                <h3 className="text-lg font-title text-gray-50 mb-4">Schedule Overview</h3>
                 <div className="space-y-3 text-sm">
                     <div className="flex items-center gap-3">
                         <ClockIcon className="w-5 h-5 text-orange-400" />
                         <span className="text-gray-400">Pattern:</span>
-                        <strong className="text-gray-100">{scheduleConfig.pattern}</strong>
+                        <strong className="text-gray-100 font-numeric">{scheduleConfig.pattern}</strong>
                     </div>
                     <div className="flex items-center gap-3">
                         <CalendarIcon className="w-5 h-5 text-orange-400" />
                         <span className="text-gray-400">Start Date:</span>
-                        <strong className="text-gray-100">{formattedStartDate}</strong>
+                        <strong className="text-gray-100 font-numeric">{formattedStartDate}</strong>
                     </div>
                      <div className="flex items-center gap-3">
                         <span className="material-icons-outlined text-orange-400 text-xl">assessment</span>
                         <span className="text-gray-400">Work Days (1yr):</span>
-                        <strong className="text-gray-100">{totalWorkDays}</strong>
+                        <strong className="text-gray-100 font-numeric">{totalWorkDays}</strong>
                     </div>
                 </div>
             </div>
@@ -50,15 +50,15 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
             <hr className="border-gray-700" />
 
             <div>
-                <h3 className="text-lg font-bold text-gray-50 mb-4">Summary for {monthName}</h3>
+                <h3 className="text-lg font-title text-gray-50 mb-4">Summary for {monthName}</h3>
                 <div className="space-y-3 text-sm">
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">Work Days:</span>
-                        <strong className="text-orange-400 font-semibold">{offshoreDays}</strong>
+                        <strong className="text-orange-400 font-semibold font-numeric">{offshoreDays}</strong>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">Off Days:</span>
-                        <strong className="text-gray-100 font-semibold">{onshoreDays}</strong>
+                        <strong className="text-gray-100 font-semibold font-numeric">{onshoreDays}</strong>
                     </div>
                     {totalDays > 0 && (
                         <div className="w-full bg-gray-700 rounded-full h-2.5 mt-2">
