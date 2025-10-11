@@ -10,7 +10,7 @@ if (process.env.API_KEY) {
 
 export const getDailyBriefing = async (
     date: Date,
-    status: 'offshore' | 'onshore',
+    status: 'offshore' | 'onshore' | 'travel',
     isFirstDay: boolean,
     isLastDay: boolean
 ): Promise<string> => {
@@ -38,6 +38,9 @@ export const getDailyBriefing = async (
         } else {
             userQuery += `Provide a "Daily Focus" with a suggested task, a relevant safety reminder, and one motivational quote.`;
         }
+    } else if (status === 'travel') {
+        systemInstruction = "You are an AI assistant for an offshore worker on a travel day. Generate a concise, helpful daily briefing in Markdown format. Ensure lists are properly formatted.";
+        userQuery = `For ${formattedDate}, which is a travel day for my offshore rotation, provide a "Travel Day Checklist". Include items like checking travel documents, confirming flight/transport details, packing last-minute essentials, and a reminder to notify family of travel plans.`;
     } else { // Onshore
         systemInstruction = "You are a helpful AI life-coach for an offshore worker on their leave. Generate a concise, helpful daily briefing in Markdown format using Google Search for timely info. Ensure lists are properly formatted.";
         userQuery = `I am an offshore worker on leave in my hometown. For today, ${formattedDate}, suggest one local activity or event happening today, one productive personal task, and one idea for relaxation.`;

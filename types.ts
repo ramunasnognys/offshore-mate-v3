@@ -13,7 +13,7 @@ export interface Schedule extends ScheduleConfig {
 }
 
 export interface RotationStatus {
-  status: 'offshore' | 'onshore' | null;
+  status: 'offshore' | 'onshore' | 'travel' | null;
   isFirstDay: boolean;
   isLastDay: boolean;
 }

@@ -11,7 +11,7 @@ interface MonthlyViewSidebarProps {
 }
 
 const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, scheduleConfig }) => {
-    const { offshoreDays, onshoreDays } = calculateMonthlyStats(displayDate, scheduleConfig);
+    const { offshoreDays, onshoreDays, travelDays } = calculateMonthlyStats(displayDate, scheduleConfig);
     const totalWorkDays = calculateTotalWorkDaysInYear(scheduleConfig);
 
     const formattedStartDate = new Date(scheduleConfig.startDate + 'T00:00:00').toLocaleDateString('en-US', {
@@ -21,7 +21,7 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
     });
     
     const monthName = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(displayDate);
-    const totalDays = offshoreDays + onshoreDays;
+    const totalDays = offshoreDays + onshoreDays + travelDays;
     const offshorePercentage = totalDays > 0 ? (offshoreDays / totalDays) * 100 : 0;
 
     return (
@@ -55,6 +55,10 @@ const MonthlyViewSidebar: React.FC<MonthlyViewSidebarProps> = ({ displayDate, sc
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">Work Days:</span>
                         <strong className="text-orange-400 font-semibold font-numeric">{offshoreDays}</strong>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Travel Days:</span>
+                        <strong className="text-travel font-semibold font-numeric">{travelDays}</strong>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">Off Days:</span>

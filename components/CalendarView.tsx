@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useCallback, useRef } from 'react';
 import { ScheduleConfig, Schedule, ViewMode } from '../types';
 import MonthlyCalendar from './MonthlyCalendar';
@@ -303,10 +304,14 @@ const CalendarView: React.FC<CalendarViewProps> = ({ scheduleConfig, onBack }) =
                 </div>
             </div>
 
-            <div className="flex justify-center items-center gap-8 mt-8 pt-6 border-t border-white/10">
+            <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-3 md:gap-8 mt-8 pt-6 border-t border-white/10">
                 <div className="legend-item">
                     <div className="legend-dot border-orange-400"></div>
                     <span className="text-sm font-medium text-gray-400">Work Period</span>
+                </div>
+                <div className="legend-item">
+                    <div className="legend-dot travel"></div>
+                    <span className="text-sm font-medium text-gray-400">Travel Day</span>
                 </div>
                 <div className="legend-item">
                     <div className="legend-dot border-gray-500"></div>

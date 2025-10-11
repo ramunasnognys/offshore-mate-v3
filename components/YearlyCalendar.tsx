@@ -1,5 +1,6 @@
 
 
+
 import React, { useMemo } from 'react';
 import { ScheduleConfig } from '../types';
 import { getRotationStatus } from '../services/scheduleService';
@@ -36,6 +37,8 @@ const MiniCalendar: React.FC<{ monthDate: Date; scheduleConfig: ScheduleConfig; 
             
             if (isOtherMonth) {
                 classes.push('other-month');
+            } else if (status === 'travel') {
+                classes.push('travel');
             } else if (status === 'offshore') {
                 classes.push('offshore');
                 

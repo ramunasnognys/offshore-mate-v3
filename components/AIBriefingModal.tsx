@@ -48,8 +48,8 @@ const AIBriefingModal: React.FC<AIBriefingModalProps> = ({ isOpen, onClose, date
 
     const formattedDate = date ? new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(date) : '';
     const rotationStatus = date && scheduleConfig ? getRotationStatus(date, new Date(scheduleConfig.startDate + 'T00:00:00'), scheduleConfig.pattern).status : null;
-    const icon = rotationStatus === 'offshore' ? 'waves' : 'home';
-    const color = rotationStatus === 'offshore' ? 'text-orange-400' : 'text-gray-300';
+    const icon = rotationStatus === 'offshore' ? 'waves' : rotationStatus === 'travel' ? 'flight_takeoff' : 'home';
+    const color = rotationStatus === 'offshore' ? 'text-orange-400' : rotationStatus === 'travel' ? 'text-travel' : 'text-gray-300';
     
     return (
          <div 

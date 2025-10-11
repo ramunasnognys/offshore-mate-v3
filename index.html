@@ -18,6 +18,9 @@
             --brand-gradient: linear-gradient(to right, var(--brand-blue), var(--brand-orange));
             --offshore-bg: rgba(249, 115, 22, 0.25);
             --offshore-text: #fb923c; /* orange-400 */
+            --travel-bg: rgba(139, 92, 246, 0.2); /* violet-500/20 */
+            --travel-text: #a78bfa; /* violet-400 */
+            --travel-border: #8b5cf6; /* violet-500 */
         }
 
         /* Keyframes for subtle background glow animation */
@@ -91,6 +94,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .text-travel { color: var(--travel-text); }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
             position: absolute;
@@ -181,6 +186,17 @@
         }
         .calendar-day.onshore { /* default style */ }
 
+        .calendar-day.travel .day-text {
+            border: 2px dotted var(--travel-border);
+            border-radius: 50%;
+            color: var(--travel-text);
+            width: 2.25rem;
+            height: 2.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .calendar-day.offshore { 
             background-color: transparent; /* Moved to pseudo-element */
         }
@@ -261,6 +277,11 @@
         .mini-calendar-day.today .day-text {
             border: 1px solid var(--brand-orange);
         }
+        
+        .mini-calendar-day.travel .day-text {
+            background-color: var(--travel-bg);
+            color: var(--travel-text);
+        }
 
         .mini-calendar-day.offshore {
             background-color: transparent;
@@ -305,6 +326,10 @@
             height: 1rem; /* 16px */
             border-radius: 50%;
             border-width: 2px;
+        }
+        .legend-dot.travel {
+            border-color: var(--travel-border);
+            border-style: dotted;
         }
 
         /* Modal Transitions */

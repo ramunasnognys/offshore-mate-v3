@@ -14,22 +14,50 @@ export const getRotationStatus = (
     const cycleLength = onDays + offDays;
     const msPerDay = 86400000;
 
-    const diffDays = Math.floor(
-        (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
-         Date.UTC(rotationStartDate.getFullYear(), rotationStartDate.getMonth(), rotationStartDate.getDate())) /
-        msPerDay
-    );
+    const calculateStatusForDate = (d: Date): RotationStatus => {
+        const diff = Math.floor(
+            (Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) -
+             Date.UTC(rotationStartDate.getFullYear(), rotationStartDate.getMonth(), rotationStartDate.getDate())) /
+            msPerDay
+        );
 
-    if (diffDays < 0) {
-        return { status: null, isFirstDay: false, isLastDay: false };
+        if (diff < 0) {
+            return { status: null, isFirstDay: false, isLastDay: false };
+        }
+        
+        const dayInCycle = diff % cycleLength;
+        const currentStatus = dayInCycle < onDays ? 'offshore' : 'onshore';
+        const isFirst = currentStatus === 'offshore' && dayInCycle === 0;
+        const isLast = currentStatus === 'offshore' && dayInCycle === onDays - 1;
+
+        return { status: currentStatus, isFirstDay: isFirst, isLastDay: isLast };
+    };
+
+    const todayStatus = calculateStatusForDate(date);
+    
+    if (todayStatus.status === 'offshore') {
+        return todayStatus;
     }
 
-    const dayInCycle = diffDays % cycleLength;
-    const status = dayInCycle < onDays ? 'offshore' : 'onshore';
-    const isFirstDay = status === 'offshore' && dayInCycle === 0;
-    const isLastDay = status === 'offshore' && dayInCycle === onDays - 1;
+    // Check for travel days if today is onshore
+    if (todayStatus.status === 'onshore') {
+        // Is tomorrow the first day offshore? -> Today is travel day
+        const tomorrow = new Date(date.getTime() + msPerDay);
+        const tomorrowStatus = calculateStatusForDate(tomorrow);
+        if (tomorrowStatus.isFirstDay) {
+            return { status: 'travel', isFirstDay: false, isLastDay: false };
+        }
 
-    return { status, isFirstDay, isLastDay };
+        // Was yesterday the last day offshore? -> Today is travel day
+        const yesterday = new Date(date.getTime() - msPerDay);
+        const yesterdayStatus = calculateStatusForDate(yesterday);
+        if (yesterdayStatus.isLastDay) {
+            return { status: 'travel', isFirstDay: false, isLastDay: false };
+        }
+    }
+    
+    // Default to original status if not a travel day
+    return todayStatus;
 };
 
 
@@ -57,7 +85,7 @@ export const calculateTotalWorkDaysInYear = (
 export const calculateMonthlyStats = (
     displayDate: Date,
     scheduleConfig: ScheduleConfig
-): { offshoreDays: number; onshoreDays: number } => {
+): { offshoreDays: number; onshoreDays: number; travelDays: number } => {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -65,6 +93,7 @@ export const calculateMonthlyStats = (
 
     let offshoreDays = 0;
     let onshoreDays = 0;
+    let travelDays = 0;
 
     for (let day = 1; day <= daysInMonth; day++) {
         const currentDate = new Date(year, month, day);
@@ -73,8 +102,10 @@ export const calculateMonthlyStats = (
             offshoreDays++;
         } else if (status === 'onshore') {
             onshoreDays++;
+        } else if (status === 'travel') {
+            travelDays++;
         }
     }
 
-    return { offshoreDays, onshoreDays };
+    return { offshoreDays, onshoreDays, travelDays };
 };
